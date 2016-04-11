@@ -1,0 +1,28 @@
+graphite_settings:
+    hosts:
+        - 'mygraphiteserver1.example.com:2024'
+        - 'mygraphiteserver2.example.com:2024'
+
+performance_counters:
+    metric_prefix: 'one_min.test.perfcounters'
+    interval: 5
+    counters:
+        - '\Network Interface(*)\Bytes Received/sec'
+        - '\Network Interface(*)\Bytes Sent/sec'
+        - '\Processor(_Total)\% Processor Time'
+
+sql_metrics:
+    sql_servers:
+        - metric_prefix: 'one_min.test.sql'
+          connection_string: "server=mssql.example.com;user id=sa;password=sa"
+          queries:
+                - interval: 10                                    # in seconds
+                  tsql: 'select @@CONNECTIONS as CONNECTIONS'
+        - metric_prefix: 'one_min.testv.%hostname%.sql'           # %hostname% will be interpreted as local hostname
+          connection_string: 'server=localhost;user id=WIN\admin' # supports windows auth
+          queries:
+                - interval: 30
+                  tsql: 'select @@CPU_BUSY as CPU_BUSY'
+                - interval: 30
+                  tsql: 'select @@IO_BUSY as IO_BUSY'
+
