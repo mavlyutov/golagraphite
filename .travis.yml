@@ -1,0 +1,13 @@
+language: go
+go:
+  - 1.6
+env:
+  # "gvm update" resets GOOS environment variable, workaround it by setting
+  # BUILD_GOOS and overriding GOOS in the build script
+  matrix:
+    - BUILD_GOOS=linux
+    - BUILD_GOOS=darwin
+    - BUILD_GOOS=windows
+script:
+  - gvm cross $BUILD_GOOS
+  - GOOS=$BUILD_GOOS go build
