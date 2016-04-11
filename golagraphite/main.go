@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/marpaia/graphite-golang"
-	"github.yandex-team.ru/mavlyutov/golagraphite"
+	"github.com/mavlyutov/golagraphite"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -15,7 +15,7 @@ func main() {
 
 	config := golagraphite.NewConfig(*config)
 
-	metrics_channel := make(chan []graphite.Metric, 1024)  // buffer of 1024 messages to survive graphite connection outages
+	metrics_channel := make(chan []graphite.Metric, 1024) // buffer of 1024 messages to survive graphite connection outages
 
 	go golagraphite.SendPerfCounters(config, metrics_channel)
 	go golagraphite.SendSQLStatements(config, metrics_channel)
