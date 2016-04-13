@@ -45,7 +45,7 @@ Here are some other examples:
 * `\Network Interface(*)\Bytes Sent/sec`
 * `\PhysicalDisk(*)\Avg. Disk Write Queue Length`
 
-#### MSSQLMetics Configuration Section
+#### MSSQLMetrics Configuration Section
 
 This section allows you to configure a list of SQL servers and the queries that will be run against those servers. You can add as many queries or servers as required.
 
