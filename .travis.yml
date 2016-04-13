@@ -1,13 +1,24 @@
 language: go
+
 go:
   - 1.6
+
 env:
-  # "gvm update" resets GOOS environment variable, workaround it by setting
-  # BUILD_GOOS and overriding GOOS in the build script
-  matrix:
-    - BUILD_GOOS=linux
-    - BUILD_GOOS=darwin
-    - BUILD_GOOS=windows
+  - GIMME_OS=linux GIMME_ARCH=amd64
+  - GIMME_OS=darwin GIMME_ARCH=amd64
+  - GIMME_OS=windows GIMME_ARCH=amd64
+
+install:
+  - go get -d -v ./...
+
 script:
-  - gvm cross $BUILD_GOOS
-  - GOOS=$BUILD_GOOS go build
+  - go build -v
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "Fx2Kx0KPKat/0Sfu4VE3IBr+0vFOThwCIXGchtdhtvG2qoZQCWaDFqjCrrqbej/yrl6PMW9N3XgY3Fx2kiYXLaUPwSTNYbVrc4U30o26lh6BYh21KrhyEMoYZ0hGPi0Ilhrria4pdWYy5xQ7TgPwUJpE8Vk2DaexFwI/xgLn9/EpH9ZcA3AoSRVGO+I5MbMVHeoC0Iy4BJ3NwfbJuCK8WgLZl/3feHxkfcV1gg4Mxk7isz19m9hFmUrTEIZEHie+g0m/i7UGMalZN4Cy6pdECgsuoGfM2ghweOXhgYKQ5ykC19B7Bh2+JokdjJMcvWDeie0sDN1R+rcYBKV22bkhxnRmOL8JNU3pUgR+ReMtfo3UT+OpHQi5QXyfezA6zN+F4Sl2YklAUk9K7+WM5U1+HISysIfZZVgvBzjlh8p237zWJre7X3cnEul9EtFgndDYmuiAxFccfcJH1fPmSfunG/bpSp9GR4QEDiIAW22gXwsS6xFVDTRVNXj2TLy52ug8wDjPEKhHOL3wFRg5lUC4WWpESATHIdgVrCDdszZ1KdlbXiGNoJofiyFoM8i4rDoKCeVLWyXBqf0GUmPxmvLhtYu90IUgXhKXCgEjyiIsYv9zWt36ocPZMloGtCGVIapQ2aqxr6NzeBB5ZvsVqsI2pRTFzWT8CKO92DqGtN4Mqns="
+  file: golagraphite_*
+  skip_cleanup: true
+  on:
+    tags: true
