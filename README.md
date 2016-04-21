@@ -1,4 +1,5 @@
 # golagraphite
+Graphite client tool written in Go
 
 ![build status](https://travis-ci.org/mavlyutov/golagraphite.svg)
 
