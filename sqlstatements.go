@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/marpaia/graphite-golang"
-	_ "github.com/zensqlmonitor/go-mssqldb" // we cant use default github.com/denisenkom/go-mssqldb cause of unmerged pull/145
+	_ "github.com/denisenkom/go-mssqldb"
 )
 
 func SendSQLStatements(config Config, metrics_channel chan []graphite.Metric) {
