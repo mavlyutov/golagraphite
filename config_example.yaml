@@ -18,11 +18,13 @@ sql_metrics:
           queries:
                 - interval: 10                                    # in seconds
                   tsql: 'select @@CONNECTIONS as CONNECTIONS'
+                  type: 'single-row'                              # the query should return single row, column_name will be interpreted as METRIC SUFFIX, row_value  - as METRIC VALUE
         - metric_prefix: 'one_min.testv.%hostname%.sql'           # %hostname% will be interpreted as local hostname
           connection_string: 'server=localhost;user id=WIN\admin' # supports windows auth
           queries:
                 - interval: 30
-                  tsql: 'select @@CPU_BUSY as CPU_BUSY'
+                  tsql: 'select @@CPU_BUSY as CPU_BUSY, @@IO_BUSY as IO_BUSY'
+                  type: 'single-row'
                 - interval: 30
-                  tsql: 'select @@IO_BUSY as IO_BUSY'
-
+                  tsql: 'SELECT DB_NAME(dbid), COUNT(dbid) FROM sys.sysprocesses WHERE dbid > 0 GROUP BY dbid'
+                  type: 'key-value'                               # the query should return a simple table with two colums, first column will be interpreted as METRIC SUFFIX, second - as METRIC VALUE
