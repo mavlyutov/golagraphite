@@ -2,12 +2,13 @@ package golagraphite
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"time"
-	"errors"
-	"github.com/marpaia/graphite-golang"
+
 	_ "github.com/denisenkom/go-mssqldb"
+	"github.com/marpaia/graphite-golang"
 )
 
 func SendSQLStatements(config Config, metrics_channel chan []graphite.Metric) {
@@ -43,18 +44,17 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 	}
 	defer db.Close()
 
+	// FIXME: there should be a startegy
 	if len(q.Tsql_row) != 0 {
 
 		rows, err := db.Query(q.Tsql_row)
 		if err != nil {
-			log.Println(err)
 			return nil, err
 		}
 		defer rows.Close()
 
 		columnNames, err := rows.Columns()
 		if err != nil {
-			log.Println(err)
 			return nil, err
 		}
 
@@ -66,12 +66,10 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 
 		rows.Next()
 		if err = rows.Scan(valuePointers...); err != nil {
-			log.Println(err)
 			return nil, err
 		}
 
 		if err = rows.Err(); err != nil {
-			log.Println(err)
 			return nil, err
 		}
 
@@ -85,9 +83,39 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 
 		return metrics, nil
 
-	} else if len(q.Tsql_table) !=0 {
+	} else if len(q.Tsql_table) != 0 {
 
-		return nil, errors.New("Unsupported SQL Metric type")
+		rows, err := db.Query(q.Tsql_table)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		data := make(map[string]string)
+		var key, value string
+
+		for rows.Next() {
+			err := rows.Scan(&key, &value)
+			if err != nil {
+				return nil, err
+			}
+			data[key] = value
+		}
+
+		err = rows.Err()
+		if err != nil {
+			return nil, err
+		}
+
+		for key, value := range data {
+			metrics = append(metrics, graphite.Metric{
+				fmt.Sprintf("%s.%s", q.Metric_prefix, NormalizeMetricName(key)),
+				fmt.Sprintf("%v", value),
+				time.Now().Unix(),
+			})
+		}
+
+		return metrics, nil
 
 	}
 
