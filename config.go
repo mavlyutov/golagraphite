@@ -31,14 +31,14 @@ type Sql_metrics struct {
 
 type Sql_server struct {
 	Connection_string string
-	Metric_prefix     string
 	Queries           []Query
 }
 
 type Query struct {
-	Type     string
-	Interval int
-	Tsql     string
+	Interval      int
+	Tsql_table    string
+	Tsql_row      string
+	Metric_prefix string
 }
 
 func NewConfig(config_path string) (config Config) {

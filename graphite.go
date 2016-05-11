@@ -1,41 +1,50 @@
 package golagraphite
 
 import (
+	"fmt"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"strings"
-
-	"os"
 
 	"github.com/marpaia/graphite-golang"
 )
 
-func sendMetric(host string, port int, metrics []graphite.Metric) {
+func sendMetricRoutine(host string, port int, metrics []graphite.Metric) {
+	err := sendMetric(host, port, metrics)
+	if err != nil {
+		for _, metric := range metrics {
+			log.Println(fmt.Sprintf("Unable to sent metric '[%v]' to graphite '%v:%v': %s", metric, host, port, err))
+		}
+	} else {
+		for _, metric := range metrics {
+			log.Printf("Sent metric '[%v]' to graphite '%v:%v'", metric, host, port)
+		}
+	}
+}
+
+func sendMetric(host string, port int, metrics []graphite.Metric) error {
 	for i, _ := range metrics {
 		metrics[i].Name = replaceHostnameStub(metrics[i].Name)
 	}
 	Graphite, conn_err := graphite.NewGraphite(host, port)
 	if conn_err != nil {
-		log.Println(conn_err)
-		return
+		return conn_err
 	}
 	defer Graphite.Disconnect()
 	send_err := Graphite.SendMetrics(metrics)
 	if send_err != nil {
-		log.Println(send_err)
-		return
+		return send_err
 	}
-	for _, metric := range metrics {
-		log.Printf("Sent metric '[%v]' to graphite '%v:%v'\n", metric, host, port)
-	}
+	return nil
 }
 
 func SendMetrics(hosts []string, metrics []graphite.Metric) {
 	for _, v := range hosts {
 		host, port_string, _ := net.SplitHostPort(v)
 		port, _ := strconv.Atoi(port_string)
-		go sendMetric(host, port, metrics)
+		go sendMetricRoutine(host, port, metrics)
 	}
 }
 

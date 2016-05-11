@@ -19,11 +19,11 @@ func SendPerfCounters(c Config, metrics_channel chan []graphite.Metric) {
 
 	for _, v := range c.Performance_counters.Counters {
 		go func(counterName string) {
-			for {	// Retry forever reading from conn counters
+			for { // Retry forever reading from conn counters
 				// Handy when perfocunters reading is not yet available (soon after boot) or counter is temporarily missing
-				ololosha, err := ReadPerformanceCounter(counterName, c.Performance_counters.Interval)
+				metric_chan, err := ReadPerformanceCounter(counterName, c.Performance_counters.Interval)
 				if err == nil {
-					for metrics := range ololosha {
+					for metrics := range metric_chan {
 						for i, v := range metrics {
 							metrics[i].Name = fmt.Sprintf("%s.%s", c.Performance_counters.Metric_prefix, v.Name)
 						}

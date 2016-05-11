@@ -13,16 +13,19 @@ performance_counters:
 
 sql_metrics:
     sql_servers:
-        - metric_prefix: 'one_min.test.sql'
-          connection_string: "server=mssql.example.com;user id=sa;password=sa"
-          queries:
-                - interval: 10                                    # in seconds
-                  tsql: 'select @@CONNECTIONS as CONNECTIONS'
-        - metric_prefix: 'one_min.testv.%hostname%.sql'           # %hostname% will be interpreted as local hostname
-          connection_string: 'server=localhost;user id=WIN\admin' # supports windows auth
-          queries:
-                - interval: 30
-                  tsql: 'select @@CPU_BUSY as CPU_BUSY'
-                - interval: 30
-                  tsql: 'select @@IO_BUSY as IO_BUSY'
 
+        - connection_string: "server=mssql.example.com;user id=sa;password=sa"
+          queries:
+                - interval: 10                                         # in seconds
+                  tsql_row: 'select @@CONNECTIONS as CONNECTIONS'      # the query should return single row, column_name will be interpreted as METRIC SUFFIX, row_value  - as METRIC VALUE
+                  metric_prefix: 'one_min.test.sql'
+
+        - connection_string: 'server=localhost;user id=WIN\admin'      # supports windows auth
+          queries:
+                - interval: 30
+                  tsql_row: 'select @@CPU_BUSY as CPU_BUSY, @@IO_BUSY as IO_BUSY'
+                  metric_prefix: 'one_min.testv.%hostname%.sql'        # %hostname% will be interpreted as local hostname
+
+                - interval: 30
+                  tsql_table: 'SELECT DB_NAME(dbid), COUNT(dbid) FROM sys.sysprocesses WHERE dbid > 0 GROUP BY dbid'  # the query should return a simple table with two colums, first column will be interpreted as METRIC SUFFIX, second - as METRIC VALUE
+                  metric_prefix: 'one_min.network'
