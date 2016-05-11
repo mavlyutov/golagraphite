@@ -35,10 +35,10 @@ type Sql_server struct {
 }
 
 type Query struct {
-	Interval int
-	Tsql_table     string
-	Tsql_row string
-	Metric_prefix     string
+	Interval      int
+	Tsql_table    string
+	Tsql_row      string
+	Metric_prefix string
 }
 
 func NewConfig(config_path string) (config Config) {

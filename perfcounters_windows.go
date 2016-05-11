@@ -19,7 +19,7 @@ func SendPerfCounters(c Config, metrics_channel chan []graphite.Metric) {
 
 	for _, v := range c.Performance_counters.Counters {
 		go func(counterName string) {
-			for {	// Retry forever reading from conn counters
+			for { // Retry forever reading from conn counters
 				// Handy when perfocunters reading is not yet available (soon after boot) or counter is temporarily missing
 				metric_chan, err := ReadPerformanceCounter(counterName, c.Performance_counters.Interval)
 				if err == nil {

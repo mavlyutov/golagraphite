@@ -1,12 +1,12 @@
 package golagraphite
 
 import (
+	"fmt"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"strings"
-	"os"
-	"fmt"
 
 	"github.com/marpaia/graphite-golang"
 )

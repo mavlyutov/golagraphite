@@ -44,6 +44,10 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 	}
 	defer db.Close()
 
+	if len(q.Tsql_row) != 0 && len(q.Tsql_row) != 0 {
+		return nil, errors.New("Both SQL Metric types provided, seems you have an error in config")
+	}
+
 	// FIXME: there should be a startegy
 	if len(q.Tsql_row) != 0 {
 
