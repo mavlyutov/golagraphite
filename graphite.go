@@ -15,11 +15,11 @@ func sendMetricRoutine(host string, port int, metrics []graphite.Metric) {
 	err := sendMetric(host, port, metrics)
 	if err != nil {
 		for _, metric := range metrics {
-			log.Println(fmt.Sprintf("Unable to sent metric '[%v]' to graphite '%v:%v' %x\n", metric, host, port, err))
+			log.Println(fmt.Sprintf("Unable to sent metric '[%v]' to graphite '%v:%v': %s", metric, host, port, err))
 		}
 	} else {
 		for _, metric := range metrics {
-			log.Printf("Sent metric '[%v]' to graphite '%v:%v'\n", metric, host, port)
+			log.Printf("Sent metric '[%v]' to graphite '%v:%v'", metric, host, port)
 		}
 	}
 }
