@@ -48,7 +48,7 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 		return nil, errors.New("Both SQL Metric types provided, seems you have an error in config")
 	}
 
-	// FIXME: there should be a startegy
+	// FIXME: there should be a strategy
 	if len(q.Tsql_row) != 0 {
 
 		rows, err := db.Query(q.Tsql_row)
@@ -68,21 +68,28 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 			valuePointers[i] = &values[i]
 		}
 
-		rows.Next()
-		if err = rows.Scan(valuePointers...); err != nil {
-			return nil, err
-		}
+		for rows.Next() {
+			if err = rows.Scan(valuePointers...); err != nil {
+				return nil, err
+			}
 
-		if err = rows.Err(); err != nil {
-			return nil, err
-		}
+			if err = rows.Err(); err != nil {
+				return nil, err
+			}
 
-		for i := 0; i < len(columnNames); i++ {
-			metrics = append(metrics, graphite.Metric{
-				fmt.Sprintf("%s.%s", q.Metric_prefix, NormalizeMetricName(columnNames[i])),
-				fmt.Sprintf("%v", values[i]),
-				time.Now().Unix(),
-			})
+			for i := 0; i < len(columnNames); i++ {
+
+				timestamp := time.Now().Unix()
+				if columnNames[i] == q.Timestamp {
+					timestamp = values[i].(time.Time).Unix()
+				}
+
+				metrics = append(metrics, graphite.Metric{
+					Name: fmt.Sprintf("%s.%s", q.Metric_prefix, NormalizeMetricName(columnNames[i])),
+					Value: fmt.Sprintf("%v", values[i]),
+					Timestamp: timestamp,
+				})
+			}
 		}
 
 		return metrics, nil
