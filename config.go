@@ -38,6 +38,7 @@ type Query struct {
 	Interval      int
 	Tsql_table    string
 	Tsql_row      string
+	Timestamp     string
 	Metric_prefix string
 }
 
