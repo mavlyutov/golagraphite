@@ -68,6 +68,8 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 			valuePointers[i] = &values[i]
 		}
 
+		timestamp := time.Now().Unix()
+
 		for rows.Next() {
 			if err = rows.Scan(valuePointers...); err != nil {
 				return nil, err
@@ -78,12 +80,12 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 			}
 
 			for i := 0; i < len(columnNames); i++ {
-
-				timestamp := time.Now().Unix()
 				if columnNames[i] == q.Timestamp {
 					timestamp = values[i].(time.Time).Unix()
 				}
+			}
 
+			for i := 0; i < len(columnNames); i++ {
 				metrics = append(metrics, graphite.Metric{
 					Name: fmt.Sprintf("%s.%s", q.Metric_prefix, NormalizeMetricName(columnNames[i])),
 					Value: fmt.Sprintf("%v", values[i]),
