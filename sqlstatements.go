@@ -44,7 +44,7 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 	}
 	defer db.Close()
 
-	if len(q.Tsql_row) != 0 && len(q.Tsql_row) != 0 {
+	if len(q.Tsql_row) != 0 && len(q.Tsql_table) != 0 {
 		return nil, errors.New("Both SQL Metric types provided, seems you have an error in config")
 	}
 
@@ -86,6 +86,11 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 			}
 
 			for i := 0; i < len(columnNames); i++ {
+
+				if q.Timestamp == columnNames[i] {
+					continue
+				}
+
 				metrics = append(metrics, graphite.Metric{
 					Name: fmt.Sprintf("%s.%s", q.Metric_prefix, NormalizeMetricName(columnNames[i])),
 					Value: fmt.Sprintf("%v", values[i]),
