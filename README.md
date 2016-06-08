@@ -63,6 +63,11 @@ tsql_* | The T-SQL query to run against the SQL Server. See [SQL Metric types](#
 metric_prefix | The Graphite metric name to use for this SQL server.
 timestamp | You can specify column name which will be interpreted as metric timestamp or leave ```now``` to use current resultset's timestamp
 
+There are a few important things to keep in mind when using this feature.
+
+* If you provide the SQL **Username** and **Password** options, they is stored in plain text in the configuration file. If you do not provide a username and password, the windows account that the golagraphite is running under will be used against the SQL Server. This is a good way to protect the credentials.
+* There is no verification that the SQL command in the configuration file is not destructive. Be sure to use a low privilege account to authenticate against SQL so that any malicious T-SQL queries don't destroy your data.
+
 #### SQL Metric types
 
 There are two different types of sql queries you can use. Which one to use is depend on you sql-query, find suitable for you.
@@ -87,13 +92,6 @@ If you query results in key-value table, where key is metric-name and value is m
 Example of suitable resultset of `tsql_table`-type and timestamps enabled.
 
 ![TSQL Table with timestamp example](/resources/tsql_table_with_timestamp_example.png "TSQL Table with timestamp example")
-
-There are a few important things to keep in mind when using this feature.
-
-* The T-SQL query should be returned with named columns which will be used as metric suffixes. You can return as many columns as you want.
-* If you provide the SQL **Username** and **Password** options, they is stored in plain text in the configuration file. If you do not provide a username and password, the windows account that the golagraphite is running under will be used against the SQL Server. This is a good way to protect the credentials.
-* There is no verification that the SQL command in the configuration file is not destructive. Be sure to use a low privilege account to authenticate against SQL so that any malicious T-SQL queries don't destroy your data.
-* If your T-SQL query returns multiple results, only the first one will be sent over to Graphite.
 
 ## Installing as a Service
 
