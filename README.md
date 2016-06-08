@@ -59,7 +59,7 @@ The next part of the configuration allows you to add a list of the T-SQL queries
 `<queries>` Configuration Values | Description
 --- | ---
 interval | The interval to send metrics to Carbon. I recommend 5 seconds or greater. The more queries you are running the longer it takes to send them to the Graphite server.
-tsql_* | The T-SQL query to run against the SQL Server. See `SQL Metric types` section for details.
+tsql_* | The T-SQL query to run against the SQL Server. See [SQL Metric types](#SQL-Metric-types) section for details.
 metric_prefix | The Graphite metric name to use for this SQL server.
 timestamp | You can specify column name which will be interpreted as metric timestamp or leave ```now``` to use current resultset's timestamp
 
@@ -68,8 +68,8 @@ timestamp | You can specify column name which will be interpreted as metric time
 There are two different types of sql queries you can use. Which one to use is depend on you sql-query, find suitable for you.
 
 ##### TSQL Row
-If your query results in simple one-row resultset and you want to use current timestamp use tsql row.
-The T-SQL query should be returned with named columns which will be used as metric suffixes.
+If your query results in simple one-row resultset and you want to use current timestamp use `tsql_row` query type.
+The T-SQL query resultset should be returned with named columns which will be used as metric suffixes.
 
 ![TSQL Row example](/resources/tsql_row_example.png "TSQL Row example")
 
@@ -80,7 +80,11 @@ With `timestamp != now` you can return as many columns as you want, otherwise on
 
 ##### TSQL Table
 
+If you query results in key-value table, where key is metric-name and value is metric-value, you may want to use `tsql_table` query type
+
 ![TSQL Table example](/resources/tsql_table_example.png "TSQL Table example")
+
+Example of suitable resultset of `tsql_table`-type and timestamps enabled.
 
 ![TSQL Table with timestamp example](/resources/tsql_table_with_timestamp_example.png "TSQL Table with timestamp example")
 
