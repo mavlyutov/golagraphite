@@ -87,6 +87,7 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 
 			for i := 0; i < len(columnNames); i++ {
 
+				// do not send timestamp column
 				if q.Timestamp == columnNames[i] {
 					continue
 				}
