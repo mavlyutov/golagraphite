@@ -60,7 +60,9 @@ func replaceHostnameStub(string_with_stub string) string {
 
 func NormalizeMetricName(rawName string) (normalizedName string) {
 
-	normalizedName = strings.Replace(rawName, `.`, `_`, -1)
+	normalizedName = strings.TrimSpace(rawName)
+
+	normalizedName = strings.Replace(normalizedName, `.`, `_`, -1)
 	normalizedName = strings.Replace(normalizedName, ` `, `_`, -1)
 	normalizedName = strings.Replace(normalizedName, `\`, `.`, -1)
 
