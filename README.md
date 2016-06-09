@@ -79,7 +79,7 @@ The T-SQL query resultset should be returned with named columns which will be us
 ![TSQL Row example](/resources/tsql_row_example.png "TSQL Row example")
 
 If your resultset contains timestamp column which you want to be used as metric timestamp, simply change the `timestamp`-field of config with the name of that column.
-With `timestamp != now` you can return as many columns as you want, otherwise only the last value of each metric will be sent to graphite server.
+With `timestamp != now` you can return as many rows as you want, otherwise only the last value of each metric will be sent to graphite server.
 
 ![TSQL Row with timestamp example](/resources/tsql_row_with_timestamp_example.png "TSQL Row with timestamp example")
 
