@@ -16,16 +16,24 @@ sql_metrics:
 
         - connection_string: "server=mssql.example.com;user id=sa;password=sa"
           queries:
+
+                # example of the query which return rows, column_name will be interpreted as METRIC-NAME SUFFIX, row_value - as METRIC VALUE
                 - interval: 10                                         # in seconds
-                  tsql_row: 'select @@CONNECTIONS as CONNECTIONS'      # the query should return single row, column_name will be interpreted as METRIC SUFFIX, row_value  - as METRIC VALUE
-                  metric_prefix: 'one_min.test.sql'
+                  tsql_row: 'select @@CONNECTIONS as CONNECTIONS, @@CPU_BUSY as CPU_BUSY'
+                  timestamp: now                                       # specify column name which will be interpreted as metric timestamp or leave as is
+                  metric_prefix: 'one_min.test.sql.usage'
 
         - connection_string: 'server=localhost;user id=WIN\admin'      # supports windows auth
           queries:
+
+                # example of the query which return a simple table with two colums, first column will be interpreted as METRIC-NAME SUFFIX, second - as METRIC VALUE,
+                # third (optional) - as METRIC TIMESTAMP
                 - interval: 30
-                  tsql_row: 'select @@CPU_BUSY as CPU_BUSY, @@IO_BUSY as IO_BUSY'
-                  metric_prefix: 'one_min.testv.%hostname%.sql'        # %hostname% will be interpreted as local hostname
+                  tsql_table: 'SELECT db=DB_NAME(dbid), connections=COUNT(dbid) FROM sys.sysprocesses WHERE dbid > 0 GROUP BY dbid'
+                  timestamp: now
+                  metric_prefix: 'one_min.test.sql.connections'
 
                 - interval: 30
-                  tsql_table: 'SELECT DB_NAME(dbid), COUNT(dbid) FROM sys.sysprocesses WHERE dbid > 0 GROUP BY dbid'  # the query should return a simple table with two colums, first column will be interpreted as METRIC SUFFIX, second - as METRIC VALUE
-                  metric_prefix: 'one_min.network'
+                  tsql_table: 'select name, accdate from sys.syslogins'
+                  metric_prefix: 'one_min.test.%hostname%.sql.logins'        # %hostname% will be interpreted as local hostname
+                  timestamp: accdate
