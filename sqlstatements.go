@@ -39,7 +39,6 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 
 	db, err := sql.Open("mssql", s.Connection_string)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 	defer db.Close()
