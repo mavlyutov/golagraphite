@@ -67,6 +67,7 @@ There are a few important things to keep in mind when using this feature.
 
 * If you provide the SQL **Username** and **Password** options, they is stored in plain text in the configuration file. If you do not provide a username and password, the windows account that the golagraphite is running under will be used against the SQL Server. This is a good way to protect the credentials.
 * There is no verification that the SQL command in the configuration file is not destructive. Be sure to use a low privilege account to authenticate against SQL so that any malicious T-SQL queries don't destroy your data.
+* If you use **timestamp** field other than ```now```, ensure that your resultset returns [datetime](https://msdn.microsoft.com/en-us/library/ms187819.aspx) type in that field
 
 #### SQL Metric types
 

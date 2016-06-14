@@ -80,7 +80,11 @@ func getSQLMetrics(s Sql_server, q Query) (metrics []graphite.Metric, err error)
 
 			for i := 0; i < len(columnNames); i++ {
 				if columnNames[i] == q.Timestamp {
-					timestamp = values[i].(time.Time).Unix()
+					datetime, ok := values[i].(time.Time)
+					if !ok {
+						return nil, errors.New(fmt.Sprintf("Timestamp field [%s] should be of type [datetime]", q.Timestamp))
+					}
+					timestamp = datetime.Unix()
 				}
 			}
 
