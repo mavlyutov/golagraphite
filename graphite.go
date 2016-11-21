@@ -62,9 +62,9 @@ func NormalizeMetricName(rawName string) (normalizedName string) {
 
 	normalizedName = strings.TrimSpace(rawName)
 
-	normalizedName = strings.Replace(normalizedName, `.`, `_`, -1)
+	normalizedName = strings.Replace(normalizedName, `.`, `_`, -1)	// see tests for examples
 	normalizedName = strings.Replace(normalizedName, ` `, `_`, -1)
-	normalizedName = strings.Replace(normalizedName, `\`, `.`, -1)
+	normalizedName = strings.Replace(normalizedName, `\`, `.`, -1)	// see tests for examples
 
 	normalizedName = strings.Replace(normalizedName, `:`, `.`, -1)
 	normalizedName = strings.Replace(normalizedName, `/`, ``, -1)
