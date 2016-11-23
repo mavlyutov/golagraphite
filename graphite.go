@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"regexp"
 
 	"github.com/marpaia/graphite-golang"
 )
@@ -60,29 +61,19 @@ func replaceHostnameStub(string_with_stub string) string {
 
 func NormalizeMetricName(rawName string) (normalizedName string) {
 
-	normalizedName = strings.TrimSpace(rawName)
+	normalizedName = strings.ToLower(rawName)
 
-	normalizedName = strings.Replace(normalizedName, `.`, `_`, -1)	// see tests for examples
-	normalizedName = strings.Replace(normalizedName, ` `, `_`, -1)
-	normalizedName = strings.Replace(normalizedName, `\`, `.`, -1)	// see tests for examples
+	// remove trailing and leading non alphanumeric characters
+	re1 := regexp.MustCompile(`(^[^a-z0-9]+)|([^a-z0-9]+$)`)
+	normalizedName = re1.ReplaceAllString(normalizedName, "")
 
-	normalizedName = strings.Replace(normalizedName, `:`, `.`, -1)
-	normalizedName = strings.Replace(normalizedName, `/`, ``, -1)
-	normalizedName = strings.Replace(normalizedName, `(`, ``, -1)
-	normalizedName = strings.Replace(normalizedName, `)`, ``, -1)
-	normalizedName = strings.Replace(normalizedName, `[`, ``, -1)
-	normalizedName = strings.Replace(normalizedName, `]`, ``, -1)
-	normalizedName = strings.Replace(normalizedName, `*`, ``, -1)
-	normalizedName = strings.Replace(normalizedName, `%`, ``, -1)
-	normalizedName = strings.Replace(normalizedName, `#`, ``, -1)
-	normalizedName = strings.Replace(normalizedName, `-`, ``, -1)
+	// replace whitespaces with underscore
+	re2 := regexp.MustCompile(`\s`)
+	normalizedName = re2.ReplaceAllString(normalizedName, "_")
 
-	normalizedName = strings.ToLower(normalizedName)
-
-	normalizedName = strings.TrimPrefix(normalizedName, "_")
-	normalizedName = strings.TrimPrefix(normalizedName, ".")
-	normalizedName = strings.TrimSuffix(normalizedName, "_")
-	normalizedName = strings.TrimSuffix(normalizedName, ".")
+	// remove non alphanumeric characters except underscore and dot
+	re3 := regexp.MustCompile(`[^a-z0-9._]`)
+	normalizedName = re3.ReplaceAllString(normalizedName, "")
 
 	return
 }

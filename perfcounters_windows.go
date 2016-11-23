@@ -87,9 +87,9 @@ func ReadPerformanceCounter(counter string, sleepInterval int) (chan []graphite.
 							c := filledBuf[i]
 							s := win.UTF16PtrToString(c.SzName)
 
-							metricName := NormalizeMetricName(counter)
+							metricName := normalizePerfCounterMetricName(counter)
 							if len(s) > 0 {
-								metricName = fmt.Sprintf("%s.%s", NormalizeMetricName(counter), NormalizeMetricName(s))
+								metricName = fmt.Sprintf("%s.%s", normalizePerfCounterMetricName(counter), normalizePerfCounterMetricName(s))
 							}
 
 							metric = append(metric, graphite.Metric{

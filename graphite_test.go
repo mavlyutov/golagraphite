@@ -9,13 +9,13 @@ var metricNameTests = []struct {
 	out string
 }{
 	{"simple_metric", "simple_metric"},
-	{" metric_with_spaces is_ugly ", "metric_with_spaces_is_ugly"},
-	{"\\Processor(_Total)\\% Processor Time", "processor_total._processor_time"},
-	{"\\PhysicalDisk(*)\\Avg. Disk Write Queue Length", "physicaldisk.avg__disk_write_queue_length"},
-	{"\\Network Interface(*)\\Bytes Received/sec", "network_interface.bytes_receivedsec"},
+	{"this.is.hostname", "this.is.hostname"},
+	{" metric_with_spaces	is_ugly ", "metric_with_spaces_is_ugly"},
+	{"..metric_with.dots.", "metric_with.dots"},
+	{"metric_with_some.±!@#[]strange_symbols!@#$%^&*()_+", "metric_with_some.strange_symbols"},
 }
 
-func TestFlagParser(t *testing.T) {
+func TestNormalizeMetricName(t *testing.T) {
 	for _, test := range metricNameTests {
 		normalized := NormalizeMetricName(test.in)
 		if normalized != test.out {
