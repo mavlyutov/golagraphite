@@ -19,7 +19,7 @@ deploy:
   provider: releases
   api_key:
     secure: rYoR97ZcvhZkOBtVNK/EUvuQfAQsQmfnje5CRPk++CAxsoZML97r1Cb2dJxJ8rzMIBs1VyBKa/onOxo6bW9iHgkg1Z30/glwglzxbrYXG5GfKqX+ZRRxv5PuPqVvr8/ypvO8H1ce01VTYo1CIp4jYO4IZlJVz6XinbAGV7ThhtaY/8KrIgxWetf694zHizoFvYcEudhc82MNiU/DMktQIklsW9LRuT4L7D3utlpYKRHDhF7Xha3v/tbfwMybKUdCVpxBKo7rwMNGjhUYk87HCr5tLB+DIdTFR19bt3B+CcLCxtne+O9uHbI7m3qjOkhdnMKKddWp+mELt+Md65C5Ymf+Q5YjSsg/mt9T4brmHR9JWYg9NTQ8tKtiHFO/n2wJ9keAPD3DTKet1IDtXXbJOONGsbppM+2BmKCWD77m04QLuvOMK2bWwyrvz85gpopdc/AzQHHkkkcsFe+cUOcuLyZBGWEuEZfafc90qNlxFnh5NtyuddmkxpLDjU2NsIdWxEqQdQlTVTHKbjSQob5aFluPEbfVqC3aknhWAKKec+UtB7E7Y6Dg9tA+zC4v/5MBxoCSdebq0GD6lR6GyI10QTapIIFqe6fbSBt06sqmYgKerI/KgX7+icru6qKGxCYS60f/meqWW6RgkJVg7nXYG73ge4TPoTR6Je9zNCC0/ic=
-  file: golagraphite_*
+  file: golagraphite_${GIMME_OS}_${GIMME_ARCH}
   on:
     repo: mavlyutov/golagraphite
     tags: true
